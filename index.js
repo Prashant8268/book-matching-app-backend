@@ -41,13 +41,18 @@ const genres = ['Fantasy', 'Mystery', 'Science Fiction', 'Romance', 'Thriller', 
 // Function to calculate Euclidean distance between two points
 function euclideanDistance(point1, point2) {
   const genreWeight = 5; // For example, giving more weight to genre
-  const genreDiff = point1.genre.toLowerCase() === point2.genre.toLowerCase() ? 0 : 1 * genreWeight;
+  const genre1 = point1.genre ? point1.genre.toLowerCase() : '';
+  const genre2 = point2.genre ? point2.genre.toLowerCase() : '';
+  const genreDiff = genre1 === genre2 ? 0 : 1 * genreWeight;
   const complexityDiff = Math.abs(point2.complexity - point1.complexity);
   return Math.sqrt(Math.pow(genreDiff, 2) + Math.pow(complexityDiff, 2));
 }
 
 
-
+app.get('/api/student', async( req, res)=>{
+  const booksData   = await Book.find();
+  return res.json(booksData);
+})
 
 app.post('/api/students', async(req, res) => {
 
