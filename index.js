@@ -1,5 +1,5 @@
 const express = require('express');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -7,9 +7,10 @@ const app = express();
 const Book  = require('./Book');
 
 
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
 app.use(cors());
 // Define your routes
+app.use(express.urlencoded());
 
 const mongoose =require('mongoose');
 
@@ -48,7 +49,9 @@ function euclideanDistance(point1, point2) {
   return Math.sqrt(Math.pow(genreDiff, 2) + Math.pow(complexityDiff, 2));
 }
 
-
+app.get('/',(req,res)=>{
+  return res.json({message: "Server is live"});
+})
 app.get('/api/student', async( req, res)=>{
   const booksData   = await Book.find();
   return res.json(booksData);
@@ -79,6 +82,27 @@ app.post('/api/students', async(req, res) => {
 
   res.status(200).json({ matchedBooks });
 });
+
+// keeping the server awake
+
+const keepServerAwake = () => {
+  const url = 'https://booking-matching-app.onrender.com'; 
+  fetch(url)
+    .then(response => {
+      if (response.ok) {
+        console.log(`Successfully pinged ${url}`);
+      } else {
+        console.error(`Failed to ping ${url}`);
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+};
+
+setInterval(keepServerAwake, 300000);
+
+
 
 // Start the server
 const PORT = process.env.PORT || 5000;
