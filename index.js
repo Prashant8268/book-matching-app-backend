@@ -1,5 +1,5 @@
 const express = require('express');
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 const cors = require('cors');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -7,14 +7,11 @@ const app = express();
 const Book  = require('./Book');
 
 
-// app.use(bodyParser.json());
+app.use(bodyParser.json());
 app.use(cors());
-// Define your routes
-app.use(express.urlencoded());
 
+// connecting to data base 
 const mongoose =require('mongoose');
-
-
 mongoose.connect(process.env.MONGO_URL,)
   .then(() => {
     console.log('Connected to MongoDB');
@@ -25,19 +22,11 @@ mongoose.connect(process.env.MONGO_URL,)
  
 
 
-// pages/api/matchBooks.js
-
-
 
 
 function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
-// Array of genre options
-const genres = ['Fantasy', 'Mystery', 'Science Fiction', 'Romance', 'Thriller', 'Historical Fiction'];
-
-
 
 // Function to calculate Euclidean distance between two points
 function euclideanDistance(point1, point2) {
@@ -49,6 +38,8 @@ function euclideanDistance(point1, point2) {
   return Math.sqrt(Math.pow(genreDiff, 2) + Math.pow(complexityDiff, 2));
 }
 
+
+// routes 
 app.get('/',(req,res)=>{
   return res.json({message: "Server is live"});
 })
@@ -69,6 +60,7 @@ app.post('/api/students', async(req, res) => {
     genre: genrePreference,
     complexity: complexityPreference,
   };
+
 
   const booksData   = await Book.find();
   const matchedBooks = booksData.filter((book) => {
